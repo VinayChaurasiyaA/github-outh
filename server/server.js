@@ -9,6 +9,8 @@ const CLIENT_SECREAT = "55862a82cafa52c6ea24beddeb6b4b229d0a4495";
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get("/getAccessToken", async (req, res) => {
   const code = req.query.code;
   const params =
@@ -24,9 +26,9 @@ app.get("/getAccessToken", async (req, res) => {
       Accept: "application/json",
     },
   })
-    .then(async (response) => {
+    .then((response) => {
       console.log(response);
-      return await response.json();
+      return response.json();
     })
     .then((data) => {
       console.log(data);
@@ -39,6 +41,23 @@ app.get("/getAccessToken", async (req, res) => {
 
 app.get("/getUser", async (req, res) => {
   req.get("Authorization"); // here we are getting the headers: which comes with the bearer token
+  await fetch("https://api.github.com/user", {
+    method: "GET",
+    headers: {
+      Authorization: req.get("Authorization"),
+    },
+  })
+    .then((response) => {
+      console.log(response);
+      return res.json(response);
+    })
+    .then((data) => {
+      console.log(data);
+      return res.json(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 app.listen(5000, () => {
   console.log("server is running on port 5000");
