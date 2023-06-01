@@ -33,6 +33,17 @@ function App() {
     }
     console.log(code);
   }, []);
+
+  async function getUser() {
+    await fetch("http://localhost:5000/getUser", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      },
+    }).then((res) => {
+      console.log(res);
+    });
+  }
   const onClick = () => {
     window.location.assign(
       "https://github.com/login/oauth/authorize/?client_id=" + CLIENT_ID
